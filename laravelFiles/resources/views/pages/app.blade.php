@@ -8,7 +8,7 @@
                     <!-- Job Description -->
                     <div class="mb-3">
                         <label for="job-description" class="form-label">Job Description</label>
-                        <textarea name="job-description" id="job-description" class="form-control" rows="24" placeholder="Enter the job description..."></textarea>
+                        <textarea name="job_description" id="job-description" class="form-control" rows="24" placeholder="Enter the job description..."></textarea>
                     </div>
                 </div>
             </div>
@@ -30,7 +30,7 @@
                         <img src="{{ url('assets/images/ui-preview.png') }}" alt="Resume Screening AI demo" class="relative transition-all rounded-lg fade-out-bottom w-100">
                     </div>
 
-                    <div class="container text-left mt-3">
+                    <div class="container text-left mt-3 mt-4">
                         <button id="submit-all" type="submit" class="btn btn-success">Submit All</button>
                     </div>
                 </div>
