@@ -26,7 +26,7 @@
                         <li>Get a sorted list of applicants in seconds</li>
                     </ol>
 
-                    <div id="resultsBox" class="accordion mt-4">
+                    <div id="resultsBox" class="accordion mt-4" id="accordionExample">
                         <!-- Results will be injected here -->
                     </div>
 
@@ -51,11 +51,11 @@
                 <form id="login-form">
                     <div class="mb-3">
                         <label for="email" class="form-label">Email address</label>
-                        <input type="email" class="form-control" id="email" placeholder="Enter email" required>
+                        <input type="email" class="form-control" id="email" placeholder="Enter email">
                     </div>
                     <div class="mb-3">
                         <label for="password" class="form-label">Password</label>
-                        <input type="password" class="form-control" id="password" placeholder="Password" required>
+                        <input type="password" class="form-control" id="password" placeholder="Password">
                     </div>
                     <button type="submit" class="btn btn-primary w-100">Login</button>
                 </form>
@@ -99,27 +99,21 @@ $(document).ready(function() {
                 // Clear previous results
                 $('#resultsBox').empty();
 
-                // Ensure response is parsed as JSON if it's a string
-                if (typeof response === 'string') {
-                    try {
-                        response = JSON.parse(response);
-                    } catch (error) {
-                        $('#resultsBox').html('<p class="text-danger">Invalid response from server.</p>');
-                        return;
-                    }
-                }
-
-                // Check if response.candidates is valid
-                if (!response.candidates || !Array.isArray(response.candidates)) {
+                // Check if response is valid
+                if (!response || !Array.isArray(response.candidates)) {
                     $('#resultsBox').html('<p class="text-danger">No candidates found or invalid response structure.</p>');
                     return;
                 }
 
                 // Create accordions for each candidate
                 response.candidates.forEach((candidate, index) => {
-                    // Ensure strong_points and weak_points are arrays
-                    const strongPoints = Array.isArray(candidate.strong_points) ? candidate.strong_points : [];
-                    const weakPoints = Array.isArray(candidate.weak_points) ? candidate.weak_points : [];
+                    let strongPoints = candidate.strong_points && candidate.strong_points.length > 0 
+                        ? candidate.strong_points.map(point => `<li>${point}</li>`).join('') 
+                        : '<li>No strong points available.</li>';
+                    
+                    let weakPoints = candidate.weak_points && candidate.weak_points.length > 0 
+                        ? candidate.weak_points.map(point => `<li>${point}</li>`).join('') 
+                        : '<li>No weak points available.</li>';
 
                     let candidateHTML = `
                         <div class="accordion-item">
@@ -132,17 +126,18 @@ $(document).ready(function() {
                                 <div class="accordion-body">
                                     <strong>Strong Points:</strong>
                                     <ul>
-                                        ${strongPoints.length > 0 ? strongPoints.map(point => `<li>${point}</li>`).join('') : '<li>No strong points available.</li>'}
+                                        ${strongPoints}
                                     </ul>
                                     <strong>Weak Points:</strong>
                                     <ul>
-                                        ${weakPoints.length > 0 ? weakPoints.map(point => `<li>${point}</li>`).join('') : '<li>No weak points available.</li>'}
+                                        ${weakPoints}
                                     </ul>
                                     <strong>Explanation:</strong>
-                                    <p>${candidate.explanation || 'No explanation provided.'}</p>
+                                    <p>${candidate.explanation}</p>
                                 </div>
                             </div>
                         </div>`;
+                    
                     $('#resultsBox').append(candidateHTML);
                 });
 
